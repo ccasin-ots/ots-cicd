@@ -47,19 +47,14 @@ pipeline {
             }
         }
 
-        stage('Regression Test') {
-            steps {
-                sh '''#!/bin/bash
-                set -e
-
-                echo "Running Postman regression tests..."
-
-                # Run Newman tests
-                newman run regressiontest/RegressionTest.postman_collection.json \
-                  --reporters cli,junit \
-                  --reporter-junit-export results.xml
-                '''
-            }
-        }
+stage('Regression Test') {
+    steps {
+        sh '''
+        echo "Running Postman regression tests..."
+        newman run regressiontest/RegressionTest.postman_collection.json \
+          --insecure
+        '''
+    }
+}
     }
 }
