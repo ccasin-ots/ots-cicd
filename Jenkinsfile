@@ -47,14 +47,35 @@ pipeline {
             }
         }
 
-stage('Regression Test') {
-    steps {
-        sh '''
-        echo "Running Postman regression tests..."
-        newman run regressiontest/RegressionTest.postman_collection.json \
-          --insecure
-        '''
-    }
-}
+        stage('Regression Test') {
+            steps {
+                sh '''
+                echo "Running Postman regression tests..."
+                
+                # Run Newman with multiple reporters
+                newman run regressiontest/RegressionTest.postman_collection.json \
+                  --insecure \
+                  --reporters cli,junit,html \
+                  --reporter-junit-export regression_results.xml \
+                  --reporter-html-export regression_results.html
+                '''
+            }
+            post {
+                always {
+                    // Publish JUnit results so Jenkins marks test status
+                    junit 'regression_results.xml'
+                    
+                    // Publish HTML report for detailed view
+                    publishHTML (target: [
+                        reportDir: '.',
+                        reportFiles: 'regression_results.html',
+                        reportName: 'API Regression Report',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true,
+                        allowMissing: true
+                    ])
+                }
+            }
+        }
     }
 }
