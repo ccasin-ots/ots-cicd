@@ -1,58 +1,92 @@
 {
-	"info": {
-		"_postman_id": "a0b95847-bfa4-489d-a724-5873624bed64",
-		"name": "RegressionTest",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33446939"
-	},
-	"item": [
-		{
-			"name": "https://ec2-18-140-203-30.ap-southeast-1.compute.amazonaws.com/ots/gateway/BSPDemoPolicy/RandomTeamGeneratorCICD/1.0/randomize/TEAM?apikey=44093a95-c01c-4bb6-979d-fcd6bdaa888b",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "accept",
-						"value": "application/json"
-					},
-					{
-						"key": "X-API-Key",
-						"value": "44093a95-c01c-4bb6-979d-fcd6bdaa888b"
-					},
-					{
-						"key": "Cookie",
-						"value": "OAuth_Token_Request_State=7a7b1fd2-b32c-4b59-9428-3b0891559889; SESSIONID_20210531035415=5EE3149531BC048EC5A69DCD381A9102"
-					}
-				],
-				"url": {
-					"raw": "https://ec2-18-140-203-30.ap-southeast-1.compute.amazonaws.com/ots/gateway/BSPDemoPolicy/RandomTeamGeneratorCICD/1.0/randomize/TEAM?apikey=44093a95-c01c-4bb6-979d-fcd6bdaa888b",
-					"protocol": "https",
-					"host": [
-						"ec2-18-140-203-30",
-						"ap-southeast-1",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"path": [
-						"ots",
-						"gateway",
-						"BSPDemoPolicy",
-						"RandomTeamGeneratorCICD",
-						"1.0",
-						"randomize",
-						"TEAM"
-					],
-					"query": [
-						{
-							"key": "apikey",
-							"value": "44093a95-c01c-4bb6-979d-fcd6bdaa888b"
-						}
-					]
-				},
-				"description": "Generated from cURL: curl --location 'https://ec2-18-140-203-30.ap-southeast-1.compute.amazonaws.com/ots/gateway/BSPDemoPolicy/RandomTeamGeneratorCICD/1.0/randomize/TEAM?apikey=44093a95-c01c-4bb6-979d-fcd6bdaa888b' \\\r\n--header 'accept: application/json' \\\r\n--header 'X-API-Key: 44093a95-c01c-4bb6-979d-fcd6bdaa888b' \\\r\n--header 'Cookie: OAuth_Token_Request_State=7a7b1fd2-b32c-4b59-9428-3b0891559889; SESSIONID_20210531035415=5EE3149531BC048EC5A69DCD381A9102'"
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "a0b95847-bfa4-489d-a724-5873624bed64",
+    "name": "RegressionTest",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33446939"
+  },
+  "item": [
+    {
+      "name": "Random Team Generator",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "44093a95-c01c-4bb6-979d-fcd6bdaa888b"
+          },
+          {
+            "key": "Cookie",
+            "value": "OAuth_Token_Request_State=7a7b1fd2-b32c-4b59-9428-3b0891559889; SESSIONID_20210531035415=5EE3149531BC048EC5A69DCD381A9102"
+          }
+        ],
+        "url": {
+          "raw": "https://ec2-18-140-203-30.ap-southeast-1.compute.amazonaws.com/ots/gateway/BSPDemoPolicy/RandomTeamGeneratorCICD/1.0/randomize/TEAM?apikey=44093a95-c01c-4bb6-979d-fcd6bdaa888b",
+          "protocol": "https",
+          "host": [
+            "ec2-18-140-203-30",
+            "ap-southeast-1",
+            "compute",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "ots",
+            "gateway",
+            "BSPDemoPolicy",
+            "RandomTeamGeneratorCICD",
+            "1.0",
+            "randomize",
+            "TEAM"
+          ],
+          "query": [
+            {
+              "key": "apikey",
+              "value": "44093a95-c01c-4bb6-979d-fcd6bdaa888b"
+            }
+          ]
+        },
+        "description": "Generated from cURL"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// ✅ Check status code",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// ✅ Parse JSON",
+              "let jsonData = {};",
+              "try {",
+              "    jsonData = pm.response.json();",
+              "} catch (e) {",
+              "    pm.test(\"Response is valid JSON\", function () {",
+              "        throw new Error(\"Invalid JSON response\");",
+              "    });",
+              "}",
+              "",
+              "// ✅ Validate `color` field exists",
+              "pm.test(\"Response has 'color' field\", function () {",
+              "    pm.expect(jsonData).to.have.property(\"color\");",
+              "});",
+              "",
+              "// ✅ Must be BLUE or RED",
+              "pm.test(\"Color must be BLUE or RED\", function () {",
+              "    pm.expect([\"BLUE\", \"RED\"]).to.include(jsonData.color);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
 }
