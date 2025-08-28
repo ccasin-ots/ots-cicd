@@ -47,12 +47,6 @@ pipeline {
             }
         }
 
-        stage('Run Test Command') {
-            steps {
-                // Example running your jar if needed
-                sh 'java -jar tools/xumlc-7.20.0.jar -h || true'
-            }
-        }
 
         stage('Regression Test') {
             steps {
