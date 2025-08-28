@@ -54,7 +54,7 @@ pipeline {
         
                 echo "Running regression test against RandomTeamGeneratorCICD API..."
         
-                RESPONSE=$(curl -s -w "\\n%{http_code}" --location \
+                RESPONSE=$(curl -s -w -k "\\n%{http_code}" --location \
                   'https://ec2-18-140-203-30.ap-southeast-1.compute.amazonaws.com/ots/gateway/BSPDemoPolicy/RandomTeamGeneratorCICD/1.0/randomize/TEAM?apikey=44093a95-c01c-4bb6-979d-fcd6bdaa888b' \
                   --header 'accept: application/json' \
                   --header 'X-API-Key: 44093a95-c01c-4bb6-979d-fcd6bdaa888b' \
