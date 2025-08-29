@@ -49,28 +49,32 @@ pipeline {
 
         stage('Regression Test') {
             steps {
-                sh '''#!/bin/bash
-                set -e
-        
-                echo "Running regression test against RandomTeamGeneratorCICD API..."
-        
-                RESPONSE=$(curl -s -w -k "\\n%{http_code}" --location \
-                  'https://ec2-18-140-203-30.ap-southeast-1.compute.amazonaws.com/ots/gateway/BSPDemoPolicy/RandomTeamGeneratorCICD/1.0/randomize/TEAM?apikey=44093a95-c01c-4bb6-979d-fcd6bdaa888b' \
-                  --header 'accept: application/json' \
-                  --header 'X-API-Key: 44093a95-c01c-4bb6-979d-fcd6bdaa888b' \
-                  --header 'Cookie: OAuth_Token_Request_State=7a7b1fd2-b32c-4b59-9428-3b0891559889; SESSIONID_20210531035415=5EE3149531BC048EC5A69DCD381A9102' )
-        
-                BODY=$(sed '$d' <<< "$RESPONSE")
-                STATUS_CODE=$(tail -n1 <<< "$RESPONSE")
-        
-                echo "HTTP Status: $STATUS_CODE"
-                echo "Response body: $BODY"
-        
-                if [ "$STATUS_CODE" -ne 200 ]; then
-                    echo "Regression test failed!"
-                    exit 1
-                fi
+                sh '''
+                echo "Running Postman regression tests..."
+                
+                # Run Newman with multiple reporters
+                newman run regressiontest/RegressionTest.postman_collection.json \
+                  --insecure \
+                  --reporters cli,junit,html \
+                  --reporter-junit-export regression_results.xml \
+                  --reporter-html-export regression_results.html
                 '''
+            }
+            post {
+                always {
+                    // Publish JUnit results so Jenkins marks test status
+                    junit 'regression_results.xml'
+                    
+                    // Publish HTML report for detailed view
+                    publishHTML (target: [
+                        reportDir: '.',
+                        reportFiles: 'regression_results.html',
+                        reportName: 'API Regression Report',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true,
+                        allowMissing: true
+                    ])
+                }
             }
         }
     }
