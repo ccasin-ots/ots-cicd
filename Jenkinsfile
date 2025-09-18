@@ -1,5 +1,11 @@
 pipeline {
     agent any
+
+    triggers {
+        // Run pipeline every time you push to GitHub
+        pollSCM('H/5 * * * *')  // checks every 5 mins (or use webhook)
+    }
+
     options {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '1'))
         disableConcurrentBuilds()
